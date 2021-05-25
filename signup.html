@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+    <script>
+        function getdata(form) {
+            var name = form.uname.value;
+            var email = form.uemail.value;
+            var phone = form.uphone.value;
+            var password = form.upassword.value;
+            var repassword = form.reupassword.value;
+            var gen = form.gender.value;
+            var city = form.ucity.value;
+
+            if (password != repassword) {
+                document.getElementById("msg").innerHTML = "Password and retype password must be same";
+            }
+            else {
+                document.getElementById("msg").innerHTML = "<table border='1'> <tr><td>NAME</td><td>" + name + "</td> </tr><tr><td>Email</td><td>" + email + "</td> </tr><tr><td>Phone</td><td>" + phone + "</td> </tr><tr><td>Password</td><td>" + password + "</td> </tr><tr><td>Retypepassword</td><td>" + repassword + "</td> </tr><tr><td>Gender</td><td>" + gen + "</td> </tr><tr><td>City</td><td>" + city + "</td> </tr> </table>";
+            }
+        }
+    </script>
+    <form>
+        <input type="text" name="uname" placeholder="Enter Name"><br />
+        <input type="text" name="uemail" placeholder="Enter email"><br />
+        <input type="text" name="uphone" placeholder="Enter phone no"><br />
+        <input type="password" name="upassword" placeholder="Enter password"><br />
+        <input type="password" name="reupassword" placeholder="ReEnter password"><br />
+        <input type="radio" name="gender" value="M"> Male<br />
+        <input type="radio" name="gender" value="F"> Female<br />
+        <select name="ucity">
+            <option value="ADI"> Ahmedabad</option>
+            <option value="RJT"> Rajkot </option>
+            <option value="ST"> Surat </option>
+        </select>
+        <input type="submit" value="signup" onclick="getdata(this.form); return false;">
+    </form>
+    <p id="msg"></p>
+
+</body>
+
+</html>
