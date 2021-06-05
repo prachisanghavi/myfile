@@ -1,21 +1,10 @@
 <?php
 include('conn/conn.php');
-if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
+if(isset($_GET['did']) && $_GET['did']!="")
 {
-	if(isset($_FILES['image']['name']) && $_FILES['image']['name']!="")
-	{
-		$file_extn=explode(".",$_FILES['image']['name']);
-		$iname=time().".".$file_extn[1];
-		move_uploaded_file($_FILES['image']['tmp_name'], "uploads_dir/".$iname);
-	}
-	else
-	{
-		$iname="";
-	}
-	$query="INSERT INTO `blog` (`id`, `title`,`image`,`short_descr`,`long_descr`,`status`) VALUES (NULL, '".$_POST['title']."','".$iname."','".$_POST['short_descr']."','".$_POST['long_descr']."','".$_POST['status']."')";
-	$result = $conn->query($query);
-	$suc_msg="Blog added Successfully!!!";
-	header("location:blog.php");
+	$sql="delete from blog where id=".$_GET['did'];
+	$result = $conn->query($sql);
+	$suc_msg="record deleted successfully";
 }
 ?>
 <!DOCTYPE html>
@@ -23,7 +12,7 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Demo | BLog Add</title>
+  <title>Demo | Blogs</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -42,11 +31,11 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
-   
+    
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Messages Dropdown Menu -->
 	  <li><a href="change_password.php">Change Password</a></li>
+      <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-comments"></i>
@@ -163,7 +152,6 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
         </div>
       </div>
 
-      <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
@@ -193,7 +181,6 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
           </li>
         </ul>
       </nav>
-    <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
   </aside>
@@ -205,70 +192,119 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Blog Add</h1>
+            <h1>Blogs</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Blog Add</li>
+              <li class="breadcrumb-item active">Blogs</li>
             </ol>
           </div>
+		  <div class="col-sm-3">
+		  <a href="addblog.php"<button class="btn btn-block bg-gradient-primary">Add New</button></a>
+		  </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
 
     <!-- Main content -->
     <section class="content">
-	  <form method="post" enctype="multipart/form-data">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">General</h3>
 
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                  <i class="fas fa-minus"></i></button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label for="inputName">Blog Title</label>
-                <input type="text" id="inputName" class="form-control" name="title" required>
-              </div>
-			  <div class="form-group">
-                <label for="inputImage">Image</label>
-                <input type="file" id="inputFile" class="form-control" name="image" required>
-              </div>
-              <div class="form-group">
-                <label for="inputDescription">Short Description</label>
-                <textarea id="inputDescription" class="form-control" rows="2"  name="short_descr" required></textarea>
-              </div>
-			  <div class="form-group">
-                <label for="inputLongDescription">Long Description</label>
-                <textarea id="inputDescription" class="form-control" rows="4"  name="long_descr" required></textarea>
-              </div>
-              <div class="form-group">
-                <label for="inputStatus">Status</label>
-                <select class="form-control custom-select" name="status" required>
-                  <option value="">Select one</option>
-                  <option value="1">Active</option>
-                  <option value="0">Inactive</option>
-                </select>
-              </div>
-            </div>
-            <!-- /.card-body -->
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Blogs</h3>
+		
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fas fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+              <i class="fas fa-times"></i></button>
           </div>
-          <!-- /.card -->
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <input type="reset" class="btn btn-secondary" value="Cancel">
-          <input type="submit" name="submit" value="Create New Blog" class="btn btn-success float-right">
+		<?php if(isset($suc_msg)&& $suc_msg!=""){
+							?>
+							<div class="text-success">
+							<?php echo $suc_msg; ?>
+							</div>
+							<?php
+						}
+						?>
+        <div class="card-body p-0">
+          <table class="table table-striped projects">
+              <thead>
+                  <tr>
+                      <th style="width: 1%">
+                          #
+                      </th>
+                      <th style="width: 20%">
+                          Blog Title
+                      </th>
+                      <th style="width: 30%">
+                          Image
+                      </th>
+                      <th>
+                          Description
+                      </th>
+                      <th style="width: 8%" class="text-center">
+                          Status
+                      </th>
+                      <th style="width: 20%">
+                      </th>
+                  </tr>
+              </thead>
+              <tbody>
+				  <?php
+				$sql = "SELECT * FROM blog";
+				$result = $conn->query($sql);
+				if ($result->num_rows > 0) {
+					$i=1;
+				  // output data of each row
+				  while($row = $result->fetch_assoc()) {
+					?>
+                  <tr>
+                      <td>
+                          <?php echo $i; ?>
+                      </td>
+                      <td>
+                          <?php echo $row['title'];?>
+                      </td>
+                      <td>
+                          <img src="uploads_dir/<?php echo $row['image'];?>" alt="No Image" height="100px"/>
+                      </td>
+					  <td>
+                          <?php echo $row['short_descr'];?>
+                      </td>
+                      <td class="project-state">
+						  <?php if($row['status']=='1') { ?>
+                          <span class="badge badge-success">Active</span>
+						  <?php } else { ?>
+						  <span class="badge badge-danger">Inactive</span>
+						  <?php } ?>
+                      </td>
+                      <td class="project-actions text-right">
+                          <a class="btn btn-info btn-sm" href="editblog.php?eid=<?php echo $row['id'];?>">
+                              <i class="fas fa-pencil-alt">
+                              </i>
+                              Edit
+                          </a>
+                          <a class="btn btn-danger btn-sm" href="blog.php?did=<?php echo $row['id'];?>">
+                              <i class="fas fa-trash">
+                              </i>
+                              Delete
+                          </a>
+                      </td>
+                  </tr>
+				  <?php $i++;}
+				}
+				?>
+                  </tbody>
+          </table>
         </div>
+        <!-- /.card-body -->
       </div>
-	  </form>
+      <!-- /.card -->
+
     </section>
     <!-- /.content -->
   </div>

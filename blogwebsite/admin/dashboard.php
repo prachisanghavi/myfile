@@ -1,29 +1,12 @@
 <?php
 include('conn/conn.php');
-if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
-{
-	if(isset($_FILES['image']['name']) && $_FILES['image']['name']!="")
-	{
-		$file_extn=explode(".",$_FILES['image']['name']);
-		$iname=time().".".$file_extn[1];
-		move_uploaded_file($_FILES['image']['tmp_name'], "uploads_dir/".$iname);
-	}
-	else
-	{
-		$iname="";
-	}
-	$query="INSERT INTO `blog` (`id`, `title`,`image`,`short_descr`,`long_descr`,`status`) VALUES (NULL, '".$_POST['title']."','".$iname."','".$_POST['short_descr']."','".$_POST['long_descr']."','".$_POST['status']."')";
-	$result = $conn->query($query);
-	$suc_msg="Blog added Successfully!!!";
-	header("location:blog.php");
-}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Demo | BLog Add</title>
+  <title>Demo | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -42,11 +25,12 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
-   
+        
+
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Messages Dropdown Menu -->
 	  <li><a href="change_password.php">Change Password</a></li>
+      <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-comments"></i>
@@ -193,7 +177,7 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
           </li>
         </ul>
       </nav>
-    <!-- /.sidebar-menu -->
+      <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
   </aside>
@@ -205,12 +189,12 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Blog Add</h1>
+            <h1>Blank Page</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Blog Add</li>
+              <li class="breadcrumb-item active">Blank Page</li>
             </ol>
           </div>
         </div>
@@ -219,56 +203,30 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
 
     <!-- Main content -->
     <section class="content">
-	  <form method="post" enctype="multipart/form-data">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">General</h3>
 
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                  <i class="fas fa-minus"></i></button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label for="inputName">Blog Title</label>
-                <input type="text" id="inputName" class="form-control" name="title" required>
-              </div>
-			  <div class="form-group">
-                <label for="inputImage">Image</label>
-                <input type="file" id="inputFile" class="form-control" name="image" required>
-              </div>
-              <div class="form-group">
-                <label for="inputDescription">Short Description</label>
-                <textarea id="inputDescription" class="form-control" rows="2"  name="short_descr" required></textarea>
-              </div>
-			  <div class="form-group">
-                <label for="inputLongDescription">Long Description</label>
-                <textarea id="inputDescription" class="form-control" rows="4"  name="long_descr" required></textarea>
-              </div>
-              <div class="form-group">
-                <label for="inputStatus">Status</label>
-                <select class="form-control custom-select" name="status" required>
-                  <option value="">Select one</option>
-                  <option value="1">Active</option>
-                  <option value="0">Inactive</option>
-                </select>
-              </div>
-            </div>
-            <!-- /.card-body -->
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Title</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fas fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+              <i class="fas fa-times"></i></button>
           </div>
-          <!-- /.card -->
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <input type="reset" class="btn btn-secondary" value="Cancel">
-          <input type="submit" name="submit" value="Create New Blog" class="btn btn-success float-right">
+        <div class="card-body">
+          Start creating your amazing application!
         </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+          Footer
+        </div>
+        <!-- /.card-footer-->
       </div>
-	  </form>
+      <!-- /.card -->
+
     </section>
     <!-- /.content -->
   </div>

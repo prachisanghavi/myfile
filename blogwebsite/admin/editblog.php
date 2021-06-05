@@ -1,20 +1,29 @@
 <?php
 include('conn/conn.php');
-if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
+if(isset($_GET['eid']) && $_GET['eid']!="")
+{
+	$sqlu = "SELECT * FROM blog WHERE id=".$_GET['eid'];
+	$resultu = $conn->query($sqlu);
+	$rowu = $resultu->fetch_assoc();
+	//print_r($rowu);die;
+	
+}
+if(isset($_POST['submit']) && $_POST['submit']=="Update Blog")
 {
 	if(isset($_FILES['image']['name']) && $_FILES['image']['name']!="")
 	{
 		$file_extn=explode(".",$_FILES['image']['name']);
 		$iname=time().".".$file_extn[1];
 		move_uploaded_file($_FILES['image']['tmp_name'], "uploads_dir/".$iname);
+		$query="UPDATE `blog`SET `title`='".$_POST['title']."',`image`='".$iname."',`short_descr`='".$_POST['short_descr']."',`long_descr`='".$_POST['long_descr']."',`status`='".$_POST['status']."' WHERE id=".$_GET['eid'];
 	}
 	else
 	{
-		$iname="";
+		$query="UPDATE `blog`SET `title`='".$_POST['title']."',`short_descr`='".$_POST['short_descr']."',`long_descr`='".$_POST['long_descr']."',`status`='".$_POST['status']."' WHERE id=".$_GET['eid'];
 	}
-	$query="INSERT INTO `blog` (`id`, `title`,`image`,`short_descr`,`long_descr`,`status`) VALUES (NULL, '".$_POST['title']."','".$iname."','".$_POST['short_descr']."','".$_POST['long_descr']."','".$_POST['status']."')";
+	
 	$result = $conn->query($query);
-	$suc_msg="Blog added Successfully!!!";
+	$suc_msg="Blog updated Successfully!!!";
 	header("location:blog.php");
 }
 ?>
@@ -23,7 +32,7 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Demo | BLog Add</title>
+  <title>Demo | BLog Edit</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -205,12 +214,12 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Blog Add</h1>
+            <h1>Blog Edit</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Blog Add</li>
+              <li class="breadcrumb-item active">Blog Edit</li>
             </ol>
           </div>
         </div>
@@ -234,26 +243,33 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
             <div class="card-body">
               <div class="form-group">
                 <label for="inputName">Blog Title</label>
-                <input type="text" id="inputName" class="form-control" name="title" required>
+                <input type="text" id="inputName" class="form-control" name="title" value="<?php echo $rowu['title'];?>"required>
               </div>
 			  <div class="form-group">
                 <label for="inputImage">Image</label>
-                <input type="file" id="inputFile" class="form-control" name="image" required>
+                <input type="file" id="inputFile" class="form-control" name="image">
+				<?php if(isset($rowu['image']) && $rowu['image']!="")
+				{
+					?>
+					<img src="uploads_dir/<?php echo $rowu['image'];?>" height="100px" alt="Image" />
+					<?php
+				}
+				?>
               </div>
               <div class="form-group">
                 <label for="inputDescription">Short Description</label>
-                <textarea id="inputDescription" class="form-control" rows="2"  name="short_descr" required></textarea>
+                <textarea id="inputDescription" class="form-control" rows="2"  name="short_descr" required><?php echo $rowu['short_descr'];?></textarea>
               </div>
 			  <div class="form-group">
                 <label for="inputLongDescription">Long Description</label>
-                <textarea id="inputDescription" class="form-control" rows="4"  name="long_descr" required></textarea>
+                <textarea id="inputDescription" class="form-control" rows="4"  name="long_descr" required><?php echo $rowu['long_descr'];?></textarea>
               </div>
               <div class="form-group">
                 <label for="inputStatus">Status</label>
                 <select class="form-control custom-select" name="status" required>
                   <option value="">Select one</option>
-                  <option value="1">Active</option>
-                  <option value="0">Inactive</option>
+                  <option value="1" <?php if($rowu['status']=="1") echo "selected"; ?>>Active</option>
+                  <option value="0" <?php if($rowu['status']=="0") echo "selected"; ?>>Inactive</option>
                 </select>
               </div>
             </div>
@@ -265,7 +281,7 @@ if(isset($_POST['submit']) && $_POST['submit']=="Create New Blog")
       <div class="row">
         <div class="col-12">
           <input type="reset" class="btn btn-secondary" value="Cancel">
-          <input type="submit" name="submit" value="Create New Blog" class="btn btn-success float-right">
+          <input type="submit" name="submit" value="Update Blog" class="btn btn-success float-right">
         </div>
       </div>
 	  </form>
